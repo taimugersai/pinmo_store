@@ -1,0 +1,29 @@
+{ 
+  "imgUrl":"http://192.168.1.109",
+  "baseUrl": "http://192.168.1.109/api",
+  "Login": {
+    "url": "/getToken/admin_api"
+  },
+  "attribute":{
+    "url": "/attribute/"
+  },
+  "getSpecDetail":{
+    "url": "/attribute/show/"
+  },
+  "category":{
+  	"url": "/category/"
+  },
+  "store":{
+  	"url": "/store/"
+  },
+  "activity":{
+    "url":"/activity/"
+  },
+  "member":{
+    "url":"/user"
+  },
+  "banner":{
+    "url":"/banner/"
+  }
+  
+}
