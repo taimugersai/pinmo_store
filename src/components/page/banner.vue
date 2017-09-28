@@ -20,7 +20,7 @@
             return {
                 size:0,
                 total:1,
-                tableData:[{title:"ID",data:"id",width:'150'},{title:"轮播图",data:"cover"},{title:"轮播图排序",data:"order"}],
+                tableData:[{title:"ID",data:"id",width:'150'},{title:"轮播图",data:"cover"},{title:"类型",data:'type',width:'150'},{title:"轮播图排序",data:"order",width:'150'}],
                 router:"addBanner",
                 url:"/banner",
     

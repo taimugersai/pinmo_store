@@ -11,7 +11,9 @@
 			<el-table-column :prop="item.data" :label="item.title"  v-for="item in tableData" :width='item.width'>
 				<template scope='scope' >
 	                <img :src="scope.row.cover" width='100px' alt="" v-if='item.data=="cover"' style="margin:0 auto" >
-	                <p v-if='item.data!="cover"'>{{scope.row[item.data]}}</p>
+	                <p v-if='item.data!="cover"&&item.data!="type"'>{{scope.row[item.data]}}</p>
+                    <p v-if="item.data=='type'&&scope.row[item.data]=='activity'">活动</p>
+                    <p v-if="item.data=='type'&&scope.row[item.data]=='goods'">商品</p>
 	                <!-- <p>{{JSON.stringify(scope.row)}}</p>
 	                <p>111</p> -->
 	              </template>

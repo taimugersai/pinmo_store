@@ -43,6 +43,7 @@
 						<img v-if="item.imageUrl" :src="item.imageUrl" class="avatar">
 						<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 					</el-upload>
+					<span v-if="item.remark" style="color:rgb(255, 73, 73)">{{item.remark}}</span>
 				</el-form-item>
 				<!-- 多图片上传 -->
 				<el-form-item :label="item.label" v-if='item.type=="imgListUpload"' :required='item.ifRequired'>
@@ -96,22 +97,20 @@
 			form: Array
 		},
 		methods: {
-			//
+			//上传图片
 			handleAvatarSuccess(res, file) {
 				var self = this;
 				console.log(res)
-				if(res.data){
-					if(!res.data.match(/^(?:http|ftp|https):\/\//)){
-			            res.data = api.imgUrl + res.data;
+				if(res.data.path){
+					if(!res.data.path.match(/^(?:http|ftp|https):\/\//)){
+			            res.data.path = api.imgUrl + res.data.path;
 			        }
 				}
-				//console.log(file)
-				//console.log(URL.createObjectURL(res.data))
-				//var image_url = obj.getAttribute('data-src');
-				
+
+
 				for(var i=0;i<self.form.length;i++){
 					if(self.form[i].type=='imgUpload'){
-						self.form[i].imageUrl= res.data
+						self.form[i].imageUrl= res.data.path
 					}
 				}
 			},

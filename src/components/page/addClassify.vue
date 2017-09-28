@@ -49,7 +49,8 @@
 						'label': '上传图片',
 						"type": 'imgUpload',
 						"imageUrl": '',
-						"ifRequired":true
+						"ifRequired":true,
+						"remark":'*建议尺寸：100px*100px'
 					},
 					{
 						'label': '',
@@ -140,7 +141,7 @@
                     });
                     return
 				}
-				if(self.form[2].value==''){
+				if(self.form[2].value===''){
 					self.$message({
                       type: 'info',
                       message: `请填写分类排序`

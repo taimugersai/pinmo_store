@@ -91,6 +91,16 @@
                         index: 'member',
                         title: '会员管理'
                     },
+                    {
+                        icon: 'el-icon-setting',
+                        index: 'order',
+                        title: '订单管理'
+                    },
+                    {
+                        icon: 'el-icon-setting',
+                        index: 'bigOrder',
+                        title: '兑换管理'
+                    },
                      {
                         icon: 'el-icon-setting',
                         index: '6',

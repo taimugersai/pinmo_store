@@ -26,6 +26,8 @@
         components: {
             hk_table
         },
+        mounted:function(){
+        }
     }
 </script>
 <style scoped>

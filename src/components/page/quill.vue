@@ -179,11 +179,12 @@
 
         data.append(this.fileName,fileInput.files[0])
         axios.post(this.uploadUrl,data).then(function(res){
-          if(res.data) {
-            if(!res.data.data.match(/^(?:http|ftp|https):\/\//)){
-                res.data.data = api.imgUrl+res.data.data;
+          console.log(res)
+          if(res.data.data.path) {
+            if(!res.data.data.path.match(/^(?:http|ftp|https):\/\//)){
+                res.data.data.path = api.imgUrl+res.data.data.path;
             }
-            self.editor.insertEmbed(self.editor.getSelection().index, 'image',res.data.data);
+            self.editor.insertEmbed(self.editor.getSelection().index, 'image',res.data.data.path);
           }
         })
       },

@@ -18,7 +18,10 @@
 							<!-- <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT"></bm-navigation> -->
 						<!-- </baidu-map>
 					</template> -->
+					<div id="r-result"><input type="text" id="suggestId" size="20" value="百度" /></div>
 					<div id="allmap" class='map'></div>
+					
+					<div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
 				</el-col>
 			</el-row>
 
@@ -82,7 +85,7 @@
 						"ifRequired":true
 					},
 					{
-						'label': '门店经度',
+						'label': '门店纬度',
 						"type": 'text',
 						"value": '',
 						"ifRequired":true
@@ -117,6 +120,18 @@
 				//district = $('#city').val() + $('#district').val();
 				self.map.centerAndZoom('江苏无锡',15);
 			})
+			var ac = new BMap.Autocomplete(    //建立一个自动完成的对象
+				{"input" : "suggestId"
+				,"location" : self.map
+			});
+			ac.addEventListener("onconfirm", function(e) {    //鼠标点击下拉列表后的事件
+			var _value = e.item.value;
+				var myValue = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+				G("searchResultPanel").innerHTML ="onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue;
+				
+				self.setPlace(myValue);
+			});
+
 			self.map.setDefaultCursor('crosshair');
 			self.map.addEventListener("click", self.clickMap);
 		    if(self.$route.query.id){
@@ -129,6 +144,21 @@
 			hk_form,
 		},
 		methods: {
+			setPlace(myValue){
+				var self=this;
+				self.map.clearOverlays();    //清除地图上所有覆盖物
+				function myFun(){
+					var pp = local.getResults().getPoi(0).point;    //获取第一个智能搜索的结果
+					self.form[6].value = pp.lng
+					self.form[7].value = pp.lat
+					self.map.centerAndZoom(pp, 18);
+					self.map.addOverlay(new BMap.Marker(pp));    //添加标注
+				}
+				var local = new BMap.LocalSearch(self.map, { //智能搜索
+				  onSearchComplete: myFun
+				});
+				local.search(myValue);
+			},
 			//将地图中心定位到当前位置
 			showPosition(position) {
 				this.center.lng = position.coords.longitude
@@ -317,11 +347,25 @@
 			}
 		}
 	}
+	function G(id) {
+		return document.getElementById(id);
+	}
 </script>
 
 <style>
 	.map {
 		width: 800px;
 		height: 600px;
+	}
+	#r-result input{
+		width: 260px;
+		height: 30px;
+		border-radius: 4px;
+		position: relative;
+		top: 50px;
+		left: 20px;
+		z-index: 99999;
+		padding-left: 30px;
+		outline: none;
 	}
 </style>

@@ -37,7 +37,8 @@
 						'label': '上传封面图片',
 						"type": 'imgUpload',
 						"imageUrl": '',
-						"fileList":[]
+						"fileList":[],
+						"remark":"*建议尺寸：100px*100px"
 					},
 					{'label':'活动内容',type:'editor',value:''},
 					{
@@ -122,7 +123,7 @@
                     });
                     return
 				}
-				if(data.order==''){
+				if(data.order===''){
 					self.$message({
                       type: 'info',
                       message: `请填写排序`

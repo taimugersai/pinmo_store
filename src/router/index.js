@@ -45,6 +45,14 @@ export default new Router({
                     component: resolve => require(['../components/page/orderList.vue'], resolve)     // vue-datasource组件
                 },
                 {
+                    path: '/bigOrder',
+                    component: resolve => require(['../components/page/bigOrder.vue'], resolve)     // vue-datasource组件
+                },
+                {
+                    path: '/bigOrderDetail',
+                    component: resolve => require(['../components/page/bigOrderDetail.vue'], resolve)     // vue-datasource组件
+                },
+                {
                     path: '/orderDetail',
                     component: resolve => require(['../components/page/orderDetail.vue'], resolve)     // vue-datasource组件
                 },

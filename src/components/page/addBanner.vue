@@ -28,7 +28,7 @@
 		data() {
 			return {
 				form: [{'label':'轮播图类型',"type":'radio',"value":'goods',opinion:[{value:"goods",text:"商品"},{value:"activity",text:'活动'}]}, //输入框。label为标题，type为类型，value为默认值
-					{'label':'所属分类',"type":'select',"value":'','placeholder':'',opinion:[]},
+					{'label':'绑定详情',"type":'select',"value":'','placeholder':'',opinion:[]},
 					{
 						'label': '排序',
 						"type": 'text',
@@ -46,7 +46,8 @@
 						'label': '上传图片',
 						"type": 'imgUpload',
 						"imageUrl": '',
-						"ifRequired":true
+						"ifRequired":true,
+						"remark":'*建议尺寸：343px*148px'
 					},
 
 					{
@@ -136,7 +137,7 @@
 					cover:self.form[3].imageUrl,
 					//attributes:self.form[3].value
 				}
-				if(data.order==''){
+				if(data.order===''){
 					self.$message({
                       type: 'info',
                       message: `请填写排序`

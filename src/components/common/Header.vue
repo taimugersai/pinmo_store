@@ -4,7 +4,7 @@
         <div class="user-info">
             <el-dropdown trigger="click" @command="handleCommand">
                 <span class="el-dropdown-link">
-                    <img class="user-logo" src="../../../static/img/img.jpg">
+                    <img class="user-logo" :src="imgUrl">
                     {{username}}
                     <i class="el-icon-caret-bottom el-icon--right"></i>
                 </span>
@@ -18,11 +18,14 @@
     </div>
 </template>
 <script>
+
+    import axios from 'axios';
     export default {
         data() {
             return {
-                name: 'linxin',
-                active:1
+                name: '',
+                active:1,
+                imgUrl:'../../../static/img/pinmo_logo.png'
             }
         },
         mounted:function(){
@@ -33,15 +36,25 @@
         },
         computed:{
             username(){
-                let username = localStorage.getItem('ms_username');
-                return username ? username : this.name;
+                var username=""
+                if(this.active==1){
+                    username="品默"
+                    this.imgUrl="../../../static/img/pinmo_logo.png"
+                }else if(this.active==2){
+                    username="麻麻香"
+                    this.imgUrl="../../../static/img/mama_logo.png"
+                }
+                //let username = localStorage.getItem('ms_username');
+                return username;
             }
         },
         methods:{
             handleCommand(command) {
                 var self=this;
                 if(command == 'loginout'){
-                    localStorage.removeItem('ms_username')
+
+                    localStorage.removeItem('token')
+                    axios.defaults.headers.common['Authorization'] = 'Bearer ';
                     this.$router.push('/login');
                 }else{
                     self.active=command

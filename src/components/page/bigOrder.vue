@@ -66,29 +66,18 @@
 			<div class="search_box">
 				<el-button type="primary" icon="search" @click="search" style='margin-top:10px;margin-left:20px;'>搜索</el-button>
 			</div>
-		    
-		    
-			
-			
 		</div>
 		<el-table :data="tableData" border style="width: 100%" ref="multipleTable" @selection-change="handleSelectionChange">
 			<el-table-column type="selection" width="55"></el-table-column>
 			<el-table-column prop="out_trade_no" label="订单号" sortable width="200">
 			</el-table-column>
-			<el-table-column prop="receive_info" label="收货信息" width="450">
+			<el-table-column prop="goods" label="商品信息">
+			</el-table-column>
+			<el-table-column prop="address" label="收货信息">
 			</el-table-column>
 			<el-table-column prop="delivery" label="配送方式" width="100">
 			</el-table-column>
-			<el-table-column prop="payment" label="支付方式" width="105">
-				<template scope='scope'>
-					<p v-if='scope.row.payment=="alipay"'>支付宝</p>
-					<p v-if='scope.row.payment=="weixin"'>微信</p>
-					<p v-if='scope.row.payment=="会员余额"'>会员余额</p>
-				</template>
-			</el-table-column>
-			<el-table-column prop="total_fee" label="总金额" width="90">
-			</el-table-column>
-			<el-table-column prop="actual_fee" label="实付金额" width="100">
+			<el-table-column prop="store" label="门店名称">
 			</el-table-column>
 			
 			<el-table-column prop="name" label="订单状态" width="125">
@@ -103,11 +92,9 @@
 					
 				</template>
 			</el-table-column>
-			<el-table-column prop="ordered_at" label="下单时间" width="200">
-			</el-table-column>
-			<el-table-column label="操作" >
+			<el-table-column label="操作" width="100">
 				<template scope="scope">
-					<router-link   :to="{ path: 'orderDetail', query: { id: scope.row.id}}" >
+					<router-link   :to="{ path: 'bigOrderDetail', query: { id: scope.row.id}}" >
 						<el-button size="small" type="primary">操作</el-button>
 					</router-link>
 					
@@ -232,7 +219,7 @@
 			},
 			getData() {
 				let self = this;
-                axios.get(api.baseUrl +'/order/'+localStorage.getItem('type')+'?page='+self.cur_page,
+                axios.get(api.baseUrl +'/bigOrder?page='+self.cur_page,
                 ).then((res) => {
                     if(res.data.responseCode == 0) {
                         self.$message({
@@ -250,7 +237,7 @@
 			},
 			search() {
 				let self = this;
-                axios.get(api.baseUrl +'/order/'+localStorage.getItem('type')+'?page='+self.cur_page,
+                axios.get(api.baseUrl +'/bigOrder?page='+self.cur_page,
                 	 {
 					    params: {
 					      	ordered_at:self.ordered_at,
@@ -317,6 +304,7 @@
 		width: 300px;
 		display: inline-block;
 	}
+
 	.search_box{
 		display: inline-block;
 		margin-top: 10px;

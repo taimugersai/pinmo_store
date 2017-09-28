@@ -8,31 +8,66 @@
 		</div>
 
 		<div class="handle-box">
-			<el-button type="warning" icon="delete" class="handle-del mr10" @click="delAll">批量删除</el-button>
-<!-- 			<el-input v-model="select_word" placeholder="筛选关键词" class="handle-input mr10"></el-input>
-			<el-button type="primary" icon="search" @click="search">搜索</el-button> -->
-			<router-link to="/addGood">
-				<el-button type="success" icon="edit" class="handle-edit mr10" style='float:right'>新增商品</el-button>
-			</router-link>
+			<div class="search_box">
+				<el-button type="warning" icon="delete" class="handle-del mr10" @click="delAll">批量删除</el-button>
+			</div>
+			<div class="search_box">
+				<span>商品搜索：</span>
+				<el-input v-model="searchData.search" placeholder="请输入商品名称或编号" class="handle-input mr10"></el-input>
+			</div>
+			<div class="search_box">
+				<span>分类选择：</span>
+				<el-select v-model="searchData.category_id" placeholder="请选择">
+					<el-option
+				      label="全部"
+				      value="">
+				    </el-option>
+				    <el-option
+				      v-for="item in Category"
+				      :label="item.name"
+				      :value="item.id">
+				    </el-option>
+				  </el-select>
+			</div>
+			<div class="search_box">
+				<el-button type="primary" icon="search" @click="goodsSearch">搜索</el-button>
+			</div>
+			<div class="search_box" style='float:right;margin-top:10px;'>
+				<router-link to="/addGood">
+					<el-button type="success" icon="edit" class="handle-edit mr10" >新增商品</el-button>
+				</router-link>
+			</div>
+			
+			
+			
+			
+			
+			
 		</div>
 		<el-table :data="tableData" border style="width: 100%" ref="multipleTable" @selection-change="handleSelectionChange">
 			<el-table-column type="selection" width="55"></el-table-column>
 			<el-table-column prop="id" label="序号" sortable width="100">
 			</el-table-column>
-			<el-table-column prop="name" label="商品名称" width="135">
+			<el-table-column  label="商品名称" >
+				<template scope="scope">
+					<span>{{scope.row.name}}</span>
+					<span class='iconfont' style="color:rgb(255, 102, 102)" v-if='scope.row.is_recommend'>&#xe600;</span>
+					<span class='iconfont' style="color:rgb(245, 166, 35)" v-if='scope.row.is_top'>&#xe61e;</span>
+				</template>
 			</el-table-column>
-			<el-table-column prop="category_id" label="所属分类" width="120">
+			<el-table-column prop="category.name" label="所属分类" width="120">
+				
 			</el-table-column>
 			<el-table-column prop="price" label="价格" width="120">
 			</el-table-column>
-			<el-table-column prop="desc" label="商品描述" >
-			</el-table-column>
+			<!-- <el-table-column prop="desc" label="商品描述" >
+			</el-table-column> -->
 			<el-table-column prop="pos_no" label="对应pos" width="100">
 			</el-table-column>
-			<el-table-column prop="is_top" label="是否热门" width="100">
+			<!-- <el-table-column prop="is_top" label="是否热门" width="100">
 			</el-table-column>
 			<el-table-column prop="is_recommend" label="是否置顶" width="100">
-			</el-table-column>
+			</el-table-column> -->
 			<el-table-column label="操作" width="180">
 				<template scope="scope">
 					<router-link :to="{ path: 'addGood', query: { id: scope.row.id}}" >
@@ -66,15 +101,62 @@
 				is_search: false,
 				size:0,
                 total:10,
+
+                Category: [],
+
+                searchData:{
+                	search:"",
+                	category_id:''
+                },
+		        searchCategoryId:'',
+		        searchWord:''
 			}
 		},
 		created() {
 			this.getData();
+			this.getAllCategory()
 		},
 		methods: {
 			handleCurrentChange(val) {
 				this.cur_page = val;
 				this.getData();
+			},
+			goodsSearch(){
+				let self = this;
+                axios.get(api.baseUrl +'/goods/'+localStorage.getItem('type')+'?page=&search='+this.searchData.search+'&category_id='+this.searchData.category_id,
+                ).then((res) => {
+                    if(res.data.responseCode == 0) {
+                        self.$message({
+                          type: 'info',
+                          message: `网络异常，获取失败`
+                        });
+                    } else {
+                        self.tableData=res.data.data.data;
+                        self.size=res.data.data.per_page;
+                        self.total=res.data.data.total;
+                    }
+                }).catch(function(error) {
+                    console.log(error);
+                });
+			},
+			getAllCategory(){
+				let self = this;
+                axios.get(api.baseUrl +'/category/all/'+localStorage.getItem('type'),
+                ).then((res) => {
+                    if(res.data.responseCode == 0) {
+                        self.$message({
+                          type: 'info',
+                          message: `网络异常，获取失败`
+                        });
+                    } else {
+                    	//console.log(res.data.data)
+                        self.Category=res.data.data;
+                        // self.size=res.data.data.per_page;
+                        // self.total=res.data.data.total;
+                    }
+                }).catch(function(error) {
+                    console.log(error);
+                });
 			},
 			getData() {
 				let self = this;
@@ -165,5 +247,22 @@
 	.handle-input {
 		width: 300px;
 		display: inline-block;
+	}
+
+	@font-face {
+	  font-family: 'iconfont';  /* project id 402141 */
+	  src: url('https://at.alicdn.com/t/font_402141_g71wq40q95krcnmi.eot');
+	  src: url('https://at.alicdn.com/t/font_402141_g71wq40q95krcnmi.eot?#iefix') format('embedded-opentype'),
+	  url('https://at.alicdn.com/t/font_402141_g71wq40q95krcnmi.woff') format('woff'),
+	  url('https://at.alicdn.com/t/font_402141_g71wq40q95krcnmi.ttf') format('truetype'),
+	  url('https://at.alicdn.com/t/font_402141_g71wq40q95krcnmi.svg#iconfont') format('svg');
+	}
+	.iconfont{
+		font-family: 'iconfont';
+		font-size: 22px;
+	}
+	.search_box{
+		display: inline-block;
+		margin-top: 10px;
 	}
 </style>

@@ -17,11 +17,13 @@
 			</el-table-column>
 			<el-table-column prop="name" label="昵称">
 			</el-table-column>
-			<el-table-column prop="avatar" label="头像">
+			<el-table-column prop="vip_no" label="会员编号">
+			</el-table-column>
+			<!-- <el-table-column prop="avatar" label="头像">
 				<template scope='scope'>
 	                <img :src="baseUrl+scope.row.avatar" width='20%' alt="">
 	              </template>
-			</el-table-column>
+			</el-table-column> -->
 			<el-table-column prop="phone" label="手机号">
 			</el-table-column>
 			<el-table-column prop="birthday" label="生日">

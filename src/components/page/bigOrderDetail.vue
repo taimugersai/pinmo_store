@@ -2,9 +2,9 @@
 	<div id="form">
 		<div class="crumbs">
 			<el-breadcrumb separator="/">
-				<el-breadcrumb-item><i class="el-icon-menu"></i> 订单管理</el-breadcrumb-item>
-				<el-breadcrumb-item :to="{ path: '/order' }"> 订单列表</el-breadcrumb-item>
-				<el-breadcrumb-item :to="{ path: '/orderDetail' }"> 订单详情</el-breadcrumb-item>
+				<el-breadcrumb-item><i class="el-icon-menu"></i> 兑换管理</el-breadcrumb-item>
+				<el-breadcrumb-item :to="{ path: '/bigOrder' }"> 兑换列表</el-breadcrumb-item>
+				<el-breadcrumb-item :to="{ path: '/bigOrderDetail' }"> 兑换详情</el-breadcrumb-item>
 			</el-breadcrumb>
 			<el-row :gutter="50">
 				<el-col :span="8">基本信息</el-col>
@@ -191,7 +191,7 @@
 
 				let self = this;
 
-                axios.get(api.baseUrl +'/order/detail/'+self.$route.query.id,
+                axios.get(api.baseUrl +'/bigOrder/detail/'+self.$route.query.id,
                 ).then((res) => {
                     if(res.data.responseCode == 0) {
                         self.$message({
@@ -212,7 +212,7 @@
 			},
 			onSubmit() {
 				let self = this;
-                axios.post(api.baseUrl +'/order/modify/'+self.$route.query.id,
+                axios.post(api.baseUrl +'/bigOrder/modify/'+self.$route.query.id,
                 	qs.stringify({
 						status: self.changestatus,
 						remark: self.remark

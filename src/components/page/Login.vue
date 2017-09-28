@@ -1,6 +1,6 @@
 <template>
 	<div class="login-wrap">
-		<div class="ms-title">后台管理系统</div>
+		<div class="ms-title">品墨&麻麻香管理系统</div>
 		<div class="ms-login">
 			<el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px" class="demo-ruleForm">
 				<el-form-item prop="username">
@@ -68,33 +68,17 @@
 								//添加axios请求头
 								axios.defaults.headers.common['Authorization'] = 'Bearer '+res.data.access_token;
 								//返回状态判断(添加响应拦截器)
-								axios.interceptors.response.use((res) =>{
-									//对axios请求成功后的方法进行一个全局处理
-								    if(!res.data.error){
-								        
-								    }
-								    return res;
-								}, (error) => {
-								    // _.toast("网络异常", 'fail');
-								    // return Promise.reject(error);
-								    self.$message({
-										type: 'info',
-										message: `网络异常`
-									});
-								});
+								
 								//页面跳转
 								self.$router.push('/index');
+							}else{
+								self.$message({
+									type: 'info',
+									message: res.responseMsg
+								});
 							}
 						}).catch(function(error) {
-							if (error.response) {
-						      switch (error.response.status) {
-						        case 401:
-						          // 返回 401 
-									self.$alert('用户名或密码错误', '登陆失败', {
-										confirmButtonText: '确定'
-									});
-						      }
-						    }
+							
 						});
 					} else {
 						console.log('error submit!!');

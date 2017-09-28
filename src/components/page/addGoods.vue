@@ -20,6 +20,7 @@
 					  </el-form-item>
 					  <el-form-item label="pos系统商品编号" prop="pos_no">
 					    <el-input v-model="formData.pos_no"></el-input>
+					    <span  style="color:rgb(255, 73, 73)">*请严格按照pos端商品编号填写，填写错误将造成商品无法支付等意外错误</span>
 					  </el-form-item>
 					  <el-form-item label="轮播图" required>
 					    <el-upload
@@ -35,6 +36,7 @@
 						<el-dialog v-model="dialogVisible" size="tiny">
 						  <img width="100%" :src="dialogImageUrl" alt="">
 						</el-dialog>
+						 <span  style="color:rgb(255, 73, 73)">*建议比例：1*1</span>
 					  </el-form-item>
 					  <el-form-item label="商品默认价格" prop='price'>
 					    <el-input v-model.number="formData.price" ></el-input>
@@ -273,11 +275,11 @@
 		    handleSuccess(file, fileList){
 
 		    	var self = this;
-		    	if(!fileList.response.data.match(/^(?:http|ftp|https):\/\//)){
-	                fileList.response.data = api.imgUrl+fileList.response.data;
-	                fileList.url=fileList.response.data
+		    	if(!fileList.response.data.path.match(/^(?:http|ftp|https):\/\//)){
+	                fileList.response.data.path = api.imgUrl+fileList.response.data.path;
+	                fileList.url=fileList.response.data.path
 	            }else{
-	            	fileList.url=fileList.response.data
+	            	fileList.url=fileList.response.data.path
 	            }
             	self.fileList.push(fileList)
             	console.log(self.fileList)
