@@ -1,8 +1,8 @@
 { 
-  "imgUrl":"http://47.92.27.56",
-  "baseUrl": "http://47.92.27.56/api",
+  "imgUrl":"http://192.168.1.130",
+  "baseUrl": "http://192.168.1.130/api/store",
   "Login": {
-    "url": "/getToken/admin_api"
+    "url": "/getToken/store_api"
   },
   "attribute":{
     "url": "/attribute/"
@@ -25,5 +25,4 @@
   "banner":{
     "url":"/banner/"
   }
-  
 }

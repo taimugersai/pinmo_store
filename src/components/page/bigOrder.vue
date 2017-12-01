@@ -1,11 +1,11 @@
 <template>
 	<div class="table">
-		<div class="crumbs">
+		<!-- <div class="crumbs">
 			<el-breadcrumb separator="/">
 				<el-breadcrumb-item><i class="el-icon-menu"></i> 订单管理</el-breadcrumb-item>
 				<el-breadcrumb-item> 订单列表</el-breadcrumb-item>
 			</el-breadcrumb>
-		</div>
+		</div> -->
 
 		<div class="handle-box">
 			<div class="search_box">
@@ -13,24 +13,18 @@
 				<el-input v-model="out_trade_no" placeholder="输入订单号" class="handle-input mr10" style='width:200px'></el-input>
 			</div>
 			<div class="search_box">
-				<span style='margin-left:10px;margin-right:10px'>开始时间:</span>
-			    <el-date-picker
-			      v-model="ordered_at.start"
-			      type="datetime"
-			      placeholder="选择日期时间"
+				<span style='margin-left:10px;margin-right:10px'>选择时间:</span>
+			     <el-date-picker
+			      v-model="ordered_at"
+			      type="daterange"
 			      align="right"
-			      :picker-options="pickerOptions1">
-			    </el-date-picker>
-			</div>
+			      unlink-panels
+			      range-separator="至"
+			      start-placeholder="开始日期"
+			      end-placeholder="结束日期"
+			      value-format='yyyy-MM-dd'
 
-			<div class="search_box">
-				<span style='margin-left:10px;margin-right:10px'>结束时间:</span>
-			    <el-date-picker
-			      v-model="ordered_at.end"
-			      type="datetime"
-			      placeholder="选择日期时间"
-			      align="right"
-			      :picker-options="pickerOptions1">
+			      :picker-options="pickerOptions2">
 			    </el-date-picker>
 			</div>
 
@@ -46,7 +40,7 @@
 				</el-select>
 			</div>
 			
-			<div class="search_box">
+			<!-- <div class="search_box">
 				<span style='margin-left:10px;margin-right:10px'>门店:</span>
 				<el-select v-model="store_id" placeholder="请选择">
 					<el-option
@@ -61,7 +55,7 @@
 				      :value="item.id">
 				    </el-option>
 				  </el-select>
-			</div>
+			</div> -->
 			
 			<div class="search_box">
 				<el-button type="primary" icon="search" @click="search" style='margin-top:10px;margin-left:20px;'>搜索</el-button>
@@ -154,7 +148,7 @@
 
 
 				options: [{
-		          value: '',
+		          value: 'all',
 		          label: '全部'
 		        }, {
 		          value: '0',
@@ -182,17 +176,14 @@
 
 
 		        out_trade_no:'',
-		        ordered_at:{
-		        	start:'',
-		        	end:''
-		        },
-		        status:"",
+		        ordered_at:'',
+		        status:"all",
 		        store_id:''
 			}
 		},
 		created() {
 			this.getData();
-			this.getStore();
+			//this.getStore();
 		},
 		methods: {
 			handleCurrentChange(val) {
@@ -201,7 +192,7 @@
 			},
 			getStore(){
 				let self = this;
-                axios.get(api.baseUrl +'/store/'+localStorage.getItem('type'),
+                axios.get(api.baseUrl +'/stores',
                 ).then((res) => {
                     if(res.data.responseCode == 0) {
                         self.$message({
@@ -209,41 +200,20 @@
                           message: `网络异常，获取失败`
                         });
                     } else {
-                    	console.log(res)
-                    	self.store=res.data.data.data
+                    	//console.log(res)
+                    	self.store=res.data.data
                         
                     }
                 }).catch(function(error) {
-                    console.log(error);
+                    //console.log(error);
                 });
 			},
 			getData() {
 				let self = this;
-                axios.get(api.baseUrl +'/bigOrder?page='+self.cur_page,
-                ).then((res) => {
-                    if(res.data.responseCode == 0) {
-                        self.$message({
-                          type: 'info',
-                          message: `网络异常，获取失败`
-                        });
-                    } else {
-                        self.tableData=res.data.data.data
-                        self.size=res.data.data.per_page
-                        self.total=res.data.data.total
-                    }
-                }).catch(function(error) {
-                    console.log(error);
-                });
-			},
-			search() {
-				let self = this;
-                axios.get(api.baseUrl +'/bigOrder?page='+self.cur_page,
-                	 {
+                axios.get(api.baseUrl +'/bigOrders',
+                	{
 					    params: {
-					      	ordered_at:self.ordered_at,
-							out_trade_no:self.out_trade_no,
-							status: self.status,
-							store_id:self.store_id
+					      	page:self.cur_page
 					    }
 					  }
                 ).then((res) => {
@@ -258,7 +228,42 @@
                         self.total=res.data.data.total
                     }
                 }).catch(function(error) {
-                    console.log(error);
+                    //console.log(error);
+                });
+			},
+			search() {
+				let self = this;
+				var data={}
+				var array = String(self.ordered_at)
+				if(array.split(',')[1]){
+					data={
+				    	page:0,
+				      	date_range:array.split(',')[0]+'/'+array.split(',')[1],
+						status: self.status
+				    }
+				}else{
+					data={
+				    	page:0,
+						status: self.status
+				    }
+				}
+                axios.get(api.baseUrl +'/bigOrders',
+                	 {
+					    params: data
+					  }
+                ).then((res) => {
+                    if(res.data.responseCode == 0) {
+                        self.$message({
+                          type: 'info',
+                          message: `网络异常，获取失败`
+                        });
+                    } else {
+                        self.tableData=res.data.data.data
+                        self.size=res.data.data.per_page
+                        self.total=res.data.data.total
+                    }
+                }).catch(function(error) {
+                    //console.log(error);
                 });
 			},
 			formatter(row, column) {

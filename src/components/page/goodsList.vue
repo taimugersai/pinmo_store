@@ -136,7 +136,7 @@
                         self.total=res.data.data.total;
                     }
                 }).catch(function(error) {
-                    console.log(error);
+                    //console.log(error);
                 });
 			},
 			getAllCategory(){
@@ -149,13 +149,13 @@
                           message: `网络异常，获取失败`
                         });
                     } else {
-                    	//console.log(res.data.data)
+                    	////console.log(res.data.data)
                         self.Category=res.data.data;
                         // self.size=res.data.data.per_page;
                         // self.total=res.data.data.total;
                     }
                 }).catch(function(error) {
-                    console.log(error);
+                    //console.log(error);
                 });
 			},
 			getData() {
@@ -173,7 +173,7 @@
                         self.total=res.data.data.total;
                     }
                 }).catch(function(error) {
-                    console.log(error);
+                    //console.log(error);
                 });
 			},
 			search() {
@@ -200,7 +200,7 @@
 	                        self.getData()
 	                    }
 	                }).catch(function(error) {
-	                    console.log(error);
+	                    //console.log(error);
 	                });
 		          })
 		          .catch(_ => {});

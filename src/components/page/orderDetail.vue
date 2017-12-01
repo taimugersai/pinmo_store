@@ -1,11 +1,11 @@
 <template>
 	<div id="form">
 		<div class="crumbs">
-			<el-breadcrumb separator="/">
+			<!-- <el-breadcrumb separator="/">
 				<el-breadcrumb-item><i class="el-icon-menu"></i> 订单管理</el-breadcrumb-item>
 				<el-breadcrumb-item :to="{ path: '/order' }"> 订单列表</el-breadcrumb-item>
 				<el-breadcrumb-item :to="{ path: '/orderDetail' }"> 订单详情</el-breadcrumb-item>
-			</el-breadcrumb>
+			</el-breadcrumb> -->
 			<el-row :gutter="50">
 				<el-col :span="8">基本信息</el-col>
 			</el-row>
@@ -79,6 +79,8 @@
 			<el-row :gutter="50">
 				<el-table :data="goods" border style="width: 100%" ref="multipleTable"  class="firstTable">
 					<el-table-column prop="name" label="商品">
+					</el-table-column>
+					<el-table-column prop="pivot.attribute" label="商品属性">
 					</el-table-column>
 					<el-table-column prop="pivot.number" label="数量">
 					</el-table-column>
@@ -191,7 +193,7 @@
 
 				let self = this;
 
-                axios.get(api.baseUrl +'/order/detail/'+self.$route.query.id,
+                axios.get(api.baseUrl +'/orders/'+self.$route.query.id,
                 ).then((res) => {
                     if(res.data.responseCode == 0) {
                         self.$message({
@@ -207,12 +209,12 @@
                         
                     }
                 }).catch(function(error) {
-                    console.log(error);
+                    //console.log(error);
                 });
 			},
 			onSubmit() {
 				let self = this;
-                axios.post(api.baseUrl +'/order/modify/'+self.$route.query.id,
+                axios.put(api.baseUrl +'/orders/'+self.$route.query.id,
                 	qs.stringify({
 						status: self.changestatus,
 						remark: self.remark
@@ -224,13 +226,16 @@
                           message: `网络异常，获取失败`
                         });
                     } else {
-                    	
+                    	self.$message({
+                          type: 'info',
+                          message: `操作成功`
+                        });
                     	self.getData()
                     	//self.store=res.data.data.data
                         
                     }
                 }).catch(function(error) {
-                    console.log(error);
+                    //console.log(error);
                 });
 			}
 

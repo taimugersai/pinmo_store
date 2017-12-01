@@ -15,17 +15,20 @@
 					</el-table-column>
 					<el-table-column prop="out_trade_no" label="订单号" >
 					</el-table-column>
-					<el-table-column prop="receive_info" label="会员">
+					<el-table-column prop="address" label="会员">
 						<template scope='scope'>
-							<p >{{scope.row.receive_info.split('/')[0]}}</p>
+							<p >{{scope.row.address.split('/')[0]}}</p>
 						</template>
 					</el-table-column>
-					<el-table-column prop="receive_info" label="电话">
+					<el-table-column prop="address" label="电话">
 						<template scope='scope'>
-							<p >{{scope.row.receive_info.split('/')[1]}}</p>
+							<p >{{scope.row.address.split('/')[1]}}</p>
 						</template>
 					</el-table-column>
 					<el-table-column prop="actual_fee" label="实付">
+						<template scope='scope'>
+							<p >0</p>
+						</template>
 					</el-table-column>
 					<el-table-column prop="status" label="订单状态">
 						<template scope='scope'>
@@ -38,13 +41,11 @@
 							<p v-if='scope.row.status==6' style="color:#FF4949">已退款</p>
 						</template>
 					</el-table-column>
-					<el-table-column prop="ordered_at" label="下单时间">
+					<el-table-column prop="created_at" label="下单时间">
 					</el-table-column>
 					<el-table-column prop="price" label="支付方式">
 						<template scope='scope'>
-							<p v-if='scope.row.payment=="alipay"'>支付宝</p>
-							<p v-if='scope.row.payment=="weixin"'>微信</p>
-							<p v-if='scope.row.payment=="会员余额"'>会员余额</p>
+							礼品卡支付
 						</template>
 					</el-table-column>
 				</el-table>
@@ -56,17 +57,17 @@
 				<el-table :data="tableData" border style="width: 100%" ref="multipleTable"  class="firstTable">
 					<el-table-column prop="id" label="收货人">
 						<template scope='scope'>
-							<p >{{scope.row.receive_info.split('/')[0]}}</p>
+							<p >{{scope.row.address.split('/')[0]}}</p>
 						</template>
 					</el-table-column>
 					<el-table-column prop="id" label="联系方式">
 						<template scope='scope'>
-							<p >{{scope.row.receive_info.split('/')[1]}}</p>
+							<p >{{scope.row.address.split('/')[1]}}</p>
 						</template>
 					</el-table-column>
 					<el-table-column prop="name" label="地址">
 						<template scope='scope'>
-							<p >{{scope.row.receive_info.split('/')[2]}}</p>
+							<p >{{scope.row.address.split('/')[2]}}</p>
 						</template>
 					</el-table-column>
 					<el-table-column prop="remark" label="备注信息">
@@ -80,6 +81,8 @@
 				<el-table :data="goods" border style="width: 100%" ref="multipleTable"  class="firstTable">
 					<el-table-column prop="name" label="商品">
 					</el-table-column>
+					<el-table-column prop="pivot.attribute" label="商品属性">
+					</el-table-column>
 					<el-table-column prop="pivot.number" label="数量">
 					</el-table-column>
 					<el-table-column prop="price" label="单价">
@@ -88,47 +91,6 @@
 						<template scope='scope'>
 							<p >{{scope.row.pivot.number*scope.row.price}}</p>
 						</template>
-					</el-table-column>
-				</el-table>
-			</el-row>
-			<el-row style="text-align:center">
-				<el-col :span="24" style='margin-bottom: 20px;'>订单操作</el-col>
-				<el-col :span="8" :offset="8">
-					<el-form label-width="80px">
-					  <el-form-item label="修改状态">
-					    <el-select v-model="changestatus" placeholder="" style="width:100%">
-					      <el-option
-						      v-for="item in options"
-						      :key="item.value"
-						      :label="item.label"
-						      :value="item.value">
-						    </el-option>
-					    </el-select>
-					  </el-form-item>
-					  <el-form-item label="备注">
-					    <el-input type="textarea" v-model="remark"></el-input>
-					  </el-form-item>
-					  <el-form-item>
-					    <el-button type="primary" @click="onSubmit" style="margin-left:-60px;">提交</el-button>
-					  </el-form-item>
-					</el-form>
-				</el-col>
-			</el-row>
-			<el-row :gutter="50">
-				<el-col :span="8">操作记录</el-col>
-			</el-row>
-			<el-row :gutter="50">
-				<el-table :data="works" border style="width: 100%" ref="multipleTable"  class="secondTable">
-					<el-table-column prop="name" label="操作者">
-					</el-table-column>
-					<el-table-column prop="updated_at" label="操作时间">
-					</el-table-column>
-					<el-table-column prop="name" label="订单状态">
-						<template scope="scope">
-							修改为 {{scope.row.order_status}}
-						</template>
-					</el-table-column>
-					<el-table-column prop="remark" label="备注信息">
 					</el-table-column>
 				</el-table>
 			</el-row>
@@ -191,7 +153,7 @@
 
 				let self = this;
 
-                axios.get(api.baseUrl +'/bigOrder/detail/'+self.$route.query.id,
+                axios.get(api.baseUrl +'/bigOrder/'+self.$route.query.id,
                 ).then((res) => {
                     if(res.data.responseCode == 0) {
                         self.$message({
@@ -199,7 +161,8 @@
                           message: `网络异常，获取失败`
                         });
                     } else {
-                    	self.tableData = [res.data.data]
+                    	self.tableData=[]
+                    	self.tableData.push(res.data.data)
                     	self.goods=res.data.data.goods
                     	self.works = res.data.data.options
                     	self.changestatus=""+res.data.data.status
@@ -207,7 +170,7 @@
                         
                     }
                 }).catch(function(error) {
-                    console.log(error);
+                    //console.log(error);
                 });
 			},
 			onSubmit() {
@@ -224,13 +187,16 @@
                           message: `网络异常，获取失败`
                         });
                     } else {
-                    	
+                    	self.$message({
+                          type: 'info',
+                          message: `操作成功`
+                        });
                     	self.getData()
                     	//self.store=res.data.data.data
                         
                     }
                 }).catch(function(error) {
-                    console.log(error);
+                    //console.log(error);
                 });
 			}
 

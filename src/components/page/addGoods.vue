@@ -241,7 +241,7 @@
 				        }
 			        }
 			    }).catch(function(error) {
-			        console.log(error);
+			        //console.log(error);
 			    });
 			},
 			//点击添加静态属性按钮
@@ -257,7 +257,7 @@
 	        },
 	        //点击添加属性标签显示输入框
 		    showInput(index) {
-		      console.log(222)
+		      //console.log(222)
 		      this.static_attributes[index].inputVisible = true;
 		      this.$nextTick(_ => {
 		        this.$refs.saveTagInput[index].$refs.input.focus();
@@ -282,7 +282,7 @@
 	            	fileList.url=fileList.response.data.path
 	            }
             	self.fileList.push(fileList)
-            	console.log(self.fileList)
+            	//console.log(self.fileList)
 		    },
 			//删除图片
 			handleRemove(file, fileList,index) {
@@ -341,7 +341,7 @@
 							content:self.formData.content,
 							static_attributes:static_attributes,
 						}
-						console.log(data)
+						//console.log(data)
 						var url='';
 					    if(self.$route.query.id){
 					      url=api.baseUrl+'/goods/'+'update/'+self.id
@@ -365,7 +365,7 @@
 		                        self.$router.push('/goods')
 		                    }
 		                }).catch(function(error) {
-		                    console.log(error);
+		                    //console.log(error);
 		                });
 					}
 				})

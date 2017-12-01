@@ -1,39 +1,37 @@
 <template>
 	<div class="table">
-		<div class="crumbs">
-			<el-breadcrumb separator="/">
-				<el-breadcrumb-item><i class="el-icon-menu"></i> 订单管理</el-breadcrumb-item>
-				<el-breadcrumb-item> 订单列表</el-breadcrumb-item>
-			</el-breadcrumb>
-		</div>
-
 		<div class="handle-box">
 			<div class="search_box">
 				<span style='margin-left:10px;margin-right:10px'>订单:</span>
 				<el-input v-model="out_trade_no" placeholder="输入订单号" class="handle-input mr10" style='width:200px'></el-input>
 			</div>
-			<div class="search_box">
+			<!-- <div class="search_box">
 				<span style='margin-left:10px;margin-right:10px'>开始时间:</span>
 			    <el-date-picker
 			      v-model="ordered_at.start"
-			      type="datetime"
+			      type="date"
 			      placeholder="选择日期时间"
-			      align="right"
-			      :picker-options="pickerOptions1">
+			      value-format='yyyy-MM-dd'
+			      align="right">
 			    </el-date-picker>
-			</div>
-
+				
+			</div> -->
+			
 			<div class="search_box">
-				<span style='margin-left:10px;margin-right:10px'>结束时间:</span>
-			    <el-date-picker
-			      v-model="ordered_at.end"
-			      type="datetime"
-			      placeholder="选择日期时间"
+				<span style='margin-left:10px;margin-right:10px'>选择时间:</span>
+			     <el-date-picker
+			      v-model="ordered_at"
+			      type="daterange"
 			      align="right"
-			      :picker-options="pickerOptions1">
+			      unlink-panels
+			      range-separator="至"
+			      start-placeholder="开始日期"
+			      end-placeholder="结束日期"
+			      value-format='yyyy-MM-dd'
+
+			      :picker-options="pickerOptions2">
 			    </el-date-picker>
 			</div>
-
 			<div class="search_box">
 				<span style='margin-left:10px;margin-right:10px'>订单状态:</span>
 			    <el-select v-model="status" placeholder="请选择">
@@ -46,7 +44,7 @@
 				</el-select>
 			</div>
 			
-			<div class="search_box">
+			<!-- <div class="search_box">
 				<span style='margin-left:10px;margin-right:10px'>门店:</span>
 				<el-select v-model="store_id" placeholder="请选择">
 					<el-option
@@ -61,7 +59,7 @@
 				      :value="item.id">
 				    </el-option>
 				  </el-select>
-			</div>
+			</div> -->
 			
 			<div class="search_box">
 				<el-button type="primary" icon="search" @click="search" style='margin-top:10px;margin-left:20px;'>搜索</el-button>
@@ -110,7 +108,26 @@
 					<router-link   :to="{ path: 'orderDetail', query: { id: scope.row.id}}" >
 						<el-button size="small" type="primary">操作</el-button>
 					</router-link>
-					
+					<el-button size="small" type="warning" @click='dialogVisible = true'>转移门店</el-button>
+					<el-dialog
+					  title="转移门店"
+					  :visible.sync="dialogVisible"
+					  size="tiny"
+					  :before-close="handleClose">
+					  <span style='margin-left:10px;margin-right:10px'>门店:</span>
+						<el-select v-model="store_id" placeholder="请选择">
+						    <el-option
+						      v-for="item in store"
+						      :key="item.value"
+						      :label="item.display_name "
+						      :value="item.id">
+						    </el-option>
+						</el-select>
+						<span slot="footer" class="dialog-footer">
+						    <el-button @click="dialogVisible = false">取 消</el-button>
+						    <el-button type="primary" @click="changeStore(scope.row.id)">确 定</el-button>
+						</span>
+					</el-dialog>
 				</template>
 			</el-table-column>
 		</el-table>
@@ -131,6 +148,7 @@
 	export default {
 		data() {
 			return {
+				dialogVisible: false,
 				activeName: 'first',
 				url: './static/vuetable.json',
 				tableData: [],
@@ -142,32 +160,37 @@
 				is_search: false,
 
 
-				pickerOptions1: {
-		          shortcuts: [{
-		            text: '今天',
-		            onClick(picker) {
-		              picker.$emit('pick', new Date());
-		            }
-		          }, {
-		            text: '昨天',
-		            onClick(picker) {
-		              const date = new Date();
-		              date.setTime(date.getTime() - 3600 * 1000 * 24);
-		              picker.$emit('pick', date);
-		            }
-		          }, {
-		            text: '一周前',
-		            onClick(picker) {
-		              const date = new Date();
-		              date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-		              picker.$emit('pick', date);
-		            }
-		          }]
-		        },
+				 pickerOptions2: {
+          shortcuts: [{
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit('pick', [start, end]);
+            }
+          }]
+        },
 
 
 				options: [{
-		          value: '',
+		          value: 'all',
 		          label: '全部'
 		        }, {
 		          value: '0',
@@ -195,11 +218,8 @@
 
 
 		        out_trade_no:'',
-		        ordered_at:{
-		        	start:'',
-		        	end:''
-		        },
-		        status:"",
+		        ordered_at:'',
+		        status:"all",
 		        store_id:''
 			}
 		},
@@ -214,7 +234,7 @@
 			},
 			getStore(){
 				let self = this;
-                axios.get(api.baseUrl +'/store/'+localStorage.getItem('type'),
+                axios.get(api.baseUrl +'/stores',
                 ).then((res) => {
                     if(res.data.responseCode == 0) {
                         self.$message({
@@ -222,17 +242,44 @@
                           message: `网络异常，获取失败`
                         });
                     } else {
-                    	console.log(res)
-                    	self.store=res.data.data.data
+                    	//console.log(res)
+                    	self.store=res.data.data
                         
                     }
                 }).catch(function(error) {
-                    console.log(error);
+                    //console.log(error);
+                });
+			},
+			changeStore(id){
+				let self = this;
+                axios.put(api.baseUrl +'/orders/transform/'+id,
+                	qs.stringify({
+						store_id: self.store_id,
+						
+					})
+                ).then((res) => {
+                    if(res.data.responseCode == 0) {
+                        self.$message({
+                          type: 'info',
+                          message: `网络异常，获取失败`
+                        });
+                    } else {
+                    	//console.log(res)
+                    	self.$message({
+                          type: 'info',
+                          message: `操作成功`
+                        });
+                        self.dialogVisible=false
+                    	self.getData()
+                        
+                    }
+                }).catch(function(error) {
+                    //console.log(error);
                 });
 			},
 			getData() {
 				let self = this;
-                axios.get(api.baseUrl +'/order/'+localStorage.getItem('type')+'?page='+self.cur_page,
+                axios.get(api.baseUrl +'/orders?page='+self.cur_page,
                 ).then((res) => {
                     if(res.data.responseCode == 0) {
                         self.$message({
@@ -245,19 +292,28 @@
                         self.total=res.data.data.total
                     }
                 }).catch(function(error) {
-                    console.log(error);
+                    //console.log(error);
                 });
 			},
 			search() {
 				let self = this;
-                axios.get(api.baseUrl +'/order/'+localStorage.getItem('type')+'?page='+self.cur_page,
+				var data={}
+				var array = String(self.ordered_at)
+				if(array.split(',')[1]){
+					data={
+				    	page:0,
+				      	date_range:array.split(',')[0]+'/'+array.split(',')[1],
+						status: self.status
+				    }
+				}else{
+					data={
+				    	page:0,
+						status: self.status
+				    }
+				}
+                axios.get(api.baseUrl +'/orders',
                 	 {
-					    params: {
-					      	ordered_at:self.ordered_at,
-							out_trade_no:self.out_trade_no,
-							status: self.status,
-							store_id:self.store_id
-					    }
+					    params: data
 					  }
                 ).then((res) => {
                     if(res.data.responseCode == 0) {
@@ -271,7 +327,7 @@
                         self.total=res.data.data.total
                     }
                 }).catch(function(error) {
-                    console.log(error);
+                    //console.log(error);
                 });
 			},
 			formatter(row, column) {
