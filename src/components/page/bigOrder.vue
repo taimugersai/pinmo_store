@@ -158,18 +158,21 @@
 		          label: '已付款'
 		        }, {
 		          value: '2',
+		          label: '已接单'
+		        },  {
+		          value: '3',
 		          label: '配送中'
 		        }, {
-		          value: '3',
+		          value: '4',
 		          label: '配送完成'
 		        }, {
-		          value: '4',
+		          value: '5',
 		          label: '确认收货'
 		        }, {
-		          value: '5',
+		          value: '6',
 		          label: '申请退款'
 		        }, {
-		          value: '6',
+		          value: '7',
 		          label: '已退款'
 		        }],
 		        store:[],
@@ -182,6 +185,9 @@
 			}
 		},
 		created() {
+			if(this.$router.history.current.query.status){
+				this.status=this.$router.history.current.query.status
+			}
 			this.getData();
 			//this.getStore();
 		},
@@ -215,7 +221,7 @@
 					    params: {
 					      	page:self.cur_page
 					    }
-					  }
+					}
                 ).then((res) => {
                     if(res.data.responseCode == 0) {
                         self.$message({

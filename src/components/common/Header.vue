@@ -22,10 +22,10 @@
               text-color="#fff"
               active-text-color="#20a0e1"
               :default-active="onRoutes" class="el-menu-demo" mode="horizontal" @select="handleSelect" >
-              
+            <router-link :to="{ path: 'console'}" ><el-menu-item index='console'>控制台</el-menu-item></router-link>
             <router-link :to="{ path: 'order'}" ><el-menu-item index='order'>订单管理</el-menu-item></router-link>
             <router-link :to="{ path: 'bigOrder'}" ><el-menu-item index='bigOrder'>兑换管理</el-menu-item></router-link>
-              
+            <!-- <router-link :to="{ path: 'setting'}" ><el-menu-item index='setting'>门店设置</el-menu-item></router-link> -->
             </el-menu>
 
         </el-row>
@@ -109,6 +109,9 @@
                      this.$router.go(0)
                 }
             },
+            handleSelect(key, keyPath) {
+                console.log(key, keyPath);
+              }
            
         }
     }

@@ -93,11 +93,12 @@
 				<template scope='scope'>
 					<p v-if='scope.row.status==0' style="color:#F7BA2A">待付款</p>
 					<p v-if='scope.row.status==1' style="color:#20A0FF">已付款</p>
-					<p v-if='scope.row.status==2' style="color:#20A0FF">配送中</p>
-					<p v-if='scope.row.status==3' style="color:#13CE66">配送完成</p>
-					<p v-if='scope.row.status==4' style="color:#13CE66">确认收货</p>
-					<p v-if='scope.row.status==5' style="color:#F7BA2A">申请退款</p>
-					<p v-if='scope.row.status==6' style="color:#FF4949">已退款</p>
+					<p v-if='scope.row.status==2' style="color:#20A0FF">已接单</p>
+					<p v-if='scope.row.status==3' style="color:#20A0FF">配送中</p>
+					<p v-if='scope.row.status==4' style="color:#13CE66">配送完成</p>
+					<p v-if='scope.row.status==5' style="color:#13CE66">确认收货</p>
+					<p v-if='scope.row.status==6' style="color:#F7BA2A">申请退款</p>
+					<p v-if='scope.row.status==7' style="color:#FF4949">已退款</p>
 					
 				</template>
 			</el-table-column>
@@ -113,7 +114,7 @@
 					  title="转移门店"
 					  :visible.sync="dialogVisible"
 					  size="tiny"
-					  :before-close="handleClose">
+					  >
 					  <span style='margin-left:10px;margin-right:10px'>门店:</span>
 						<el-select v-model="store_id" placeholder="请选择">
 						    <el-option
@@ -200,18 +201,21 @@
 		          label: '已付款'
 		        }, {
 		          value: '2',
+		          label: '已接单'
+		        },  {
+		          value: '3',
 		          label: '配送中'
 		        }, {
-		          value: '3',
+		          value: '4',
 		          label: '配送完成'
 		        }, {
-		          value: '4',
+		          value: '5',
 		          label: '确认收货'
 		        }, {
-		          value: '5',
+		          value: '6',
 		          label: '申请退款'
 		        }, {
-		          value: '6',
+		          value: '7',
 		          label: '已退款'
 		        }],
 		        store:[],
@@ -224,6 +228,9 @@
 			}
 		},
 		created() {
+			if(this.$router.history.current.query.status){
+				this.status=this.$router.history.current.query.status
+			}
 			this.getData();
 			this.getStore();
 		},
@@ -279,7 +286,24 @@
 			},
 			getData() {
 				let self = this;
-                axios.get(api.baseUrl +'/orders?page='+self.cur_page,
+				//处理时间
+				var time = String(self.ordered_at)
+                if(time.split(',')[1]){
+                  var date_range=time.split(',')[0]+'/'+time.split(',')[1]
+                }else{
+                   var date_range=""
+                }
+                axios.get(api.baseUrl +'/orders',
+                	{
+					    params: {
+					    	page:self.cur_page,
+					      	date_range:date_range,
+							out_trade_no:self.out_trade_no,
+							status: self.status,
+						 	store_id:self.store_id,
+							brand_id:localStorage.getItem('type')
+					    }
+					}
                 ).then((res) => {
                     if(res.data.responseCode == 0) {
                         self.$message({

@@ -31,11 +31,12 @@
 						<template scope='scope'>
 							<p v-if='scope.row.status==0' style="color:#F7BA2A">待付款</p>
 							<p v-if='scope.row.status==1' style="color:#20A0FF">已付款</p>
-							<p v-if='scope.row.status==2' style="color:#20A0FF">配送中</p>
-							<p v-if='scope.row.status==3' style="color:#13CE66">配送完成</p>
-							<p v-if='scope.row.status==4' style="color:#13CE66">确认收货</p>
-							<p v-if='scope.row.status==5' style="color:#F7BA2A">申请退款</p>
-							<p v-if='scope.row.status==6' style="color:#FF4949">已退款</p>
+							<p v-if='scope.row.status==2' style="color:#20A0FF">已接单</p>
+							<p v-if='scope.row.status==3' style="color:#20A0FF">配送中</p>
+							<p v-if='scope.row.status==4' style="color:#13CE66">配送完成</p>
+							<p v-if='scope.row.status==5' style="color:#13CE66">确认收货</p>
+							<p v-if='scope.row.status==6' style="color:#F7BA2A">申请退款</p>
+							<p v-if='scope.row.status==7' style="color:#FF4949">已退款</p>
 						</template>
 					</el-table-column>
 					<el-table-column prop="ordered_at" label="下单时间">
@@ -155,28 +156,28 @@
 				changestatus:"",
 				remark:'',
 		        options: [{
-		          value: '',
+		          value: 'all',
 		          label: '全部'
-		        }, {
-		          value: '0',
-		          label: '待付款'
-		        }, {
+		        },  {
 		          value: '1',
 		          label: '已付款'
-		        }, {
+		        },{
 		          value: '2',
-		          label: '配送中'
+		          label: '已接单'
 		        }, {
 		          value: '3',
-		          label: '配送完成'
+		          label: '配送中'
 		        }, {
 		          value: '4',
-		          label: '确认收货'
+		          label: '配送完成'
 		        }, {
 		          value: '5',
-		          label: '申请退款'
+		          label: '确认收货'
 		        }, {
 		          value: '6',
+		          label: '申请退款'
+		        }, {
+		          value: '7',
 		          label: '已退款'
 		        }],
 

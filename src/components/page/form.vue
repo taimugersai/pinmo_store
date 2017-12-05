@@ -101,13 +101,12 @@
 			handleAvatarSuccess(res, file) {
 				var self = this;
 				//console.log(res)
+				//如果返回相对路径，则转化成绝对路径
 				if(res.data.path){
 					if(!res.data.path.match(/^(?:http|ftp|https):\/\//)){
 			            res.data.path = api.imgUrl + res.data.path;
 			        }
 				}
-
-
 				for(var i=0;i<self.form.length;i++){
 					if(self.form[i].type=='imgUpload'){
 						self.form[i].imageUrl= res.data.path
@@ -133,7 +132,6 @@
 			},
 			//改变下拉框
 			selectChange(){
-				//alert(111)
 				this.$emit('selectChange')
 			}
 
