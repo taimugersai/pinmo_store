@@ -43,7 +43,7 @@
 					</el-form-item>
 					<el-form-item label="营业结束时间">
 						<el-time-select v-model="end_time" :picker-options="{
-							    start: '06:00',
+							    start:one_hour ,
 							    step: '1:00',
 							    end: '24:00'
 							  }" placeholder="选择时间" :clearable='false'>
@@ -107,7 +107,7 @@
 			</el-col>
 		</el-row>
 		<!-- 音频 -->
-		<audio id="bgMusic" src='../../../static/newVoice.mp3'>
+		<audio id="bgMusic" src='../static/newVoice.mp3'>
 
 		</audio>
 	</div>
@@ -206,7 +206,17 @@
 			setInterval(function() {
 				self.getNew();
 				this.getBigOrderNew();
-			}, 300000)
+			}, 3000000)
+		},
+		computed:{
+			one_hour:function(){
+				var one_hour=''
+				var self = this;
+				one_hour = Number(self.start_time.split(':')[0])+1
+				one_hour = one_hour+":00"
+				return one_hour
+			}
+
 		},
 		methods: {
 			//获得总金额

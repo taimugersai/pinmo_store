@@ -10,7 +10,6 @@
 				<el-col :span="12">
 					<hk_form :form='form' v-on:onSubmit="onSubmit">
 					</hk_form>
-
 				</el-col>
 			</el-row>
 

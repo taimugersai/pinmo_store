@@ -39,7 +39,7 @@
 				</el-form-item>
 				<!-- 图片上传 -->
 				<el-form-item :label="item.label" v-if='item.type=="imgUpload"' :required='item.ifRequired'>
-					<el-upload class="avatar-uploader" :action="uploadUrl" :show-file-list="false" :on-success="handleAvatarSuccess" name='file' :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :file-list="item.fileList" >
+					<el-upload class="avatar-uploader" :action="uploadUrl" :show-file-list="false" :on-success="handleAvatarSuccess" name='file' :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :file-list="item.fileList" :headers='headers'>
 						<img v-if="item.imageUrl" :src="item.imageUrl" class="avatar">
 						<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 					</el-upload>
@@ -79,6 +79,9 @@
 		name: 'form',
 		data() {
 			return {
+				headers:{
+		        	'Accept': 'application/json, text/plain, /'
+		        },
 				uploadUrl:api.baseUrl+"/upload"
 				// {'label':'商品名称',"type":'text',"value":''},//输入框。label为标题，type为类型，value为默认值
 				// {'label':'所属分类',"type":'select',"value":'','placeholder':'',opinion:[{value:"小西点1"},{value:"小西点2"},{value:"小西点3"},{value:"小西点4"},{value:"小西点5"}]},//下来列表。label为标题，type为类型，value为默认值需要为数组,opinion为复选框的选项
