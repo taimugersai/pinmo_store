@@ -31,7 +31,7 @@
 
 			<el-dialog title="配置" :visible.sync="dialogVisible" width="30%" >
 				<el-form label-width="180px">
-					<el-form-item label="营业起始时间">
+					<el-form-item label="配送起始时间">
 						<el-col :span="11">
 							<el-time-select v-model="start_time" :picker-options="{
 							    start: '06:00',
@@ -41,8 +41,26 @@
 							</el-time-select>
 						</el-col>
 					</el-form-item>
-					<el-form-item label="营业结束时间">
+					<el-form-item label="配送结束时间">
 						<el-time-select v-model="end_time" :picker-options="{
+							    start:one_hour ,
+							    step: '1:00',
+							    end: '24:00'
+							  }" placeholder="选择时间" :clearable='false'>
+						</el-time-select>
+					</el-form-item>
+					<el-form-item label="自提起始时间">
+						<el-col :span="11">
+							<el-time-select v-model="zt_start_time" :picker-options="{
+							    start: '06:00',
+							    step: '1:00',
+							    end: '24:00'
+							  }" placeholder="选择时间" :clearable='false'>
+							</el-time-select>
+						</el-col>
+					</el-form-item>
+					<el-form-item label="自提结束时间">
+						<el-time-select v-model="zt_end_time" :picker-options="{
 							    start:one_hour ,
 							    step: '1:00',
 							    end: '24:00'
@@ -192,6 +210,9 @@
 				//默认开始时间，默认结束时间
 				start_time: "9:00",
 				end_time: '22:00',
+				zt_start_time: "9:00",
+				zt_end_time: '22:00',
+
 				
 			}
 		},
@@ -361,8 +382,12 @@
 							message: `网络异常，获取失败`
 						});
 					} else {
-						self.start_time = res.data.data[0].value
-						self.end_time = res.data.data[1].value
+						alert(JSON.stringify(res.data))
+						self.start_time = res.data.data.start_time
+						self.end_time = res.data.data.end_time
+						self.zt_start_time = res.data.data.zt_start_time
+						self.zt_end_time = res.data.data.zt_end_time 
+						
 					}
 				}).catch(function(error) {
 					//console.log(error);
@@ -375,7 +400,9 @@
 				axios.post(api.baseUrl + '/configs',
 					qs.stringify({
 						start_time: self.start_time,
-						end_time: self.end_time
+						end_time: self.end_time,
+						zt_start_time: self.zt_start_time,
+						zt_end_time: self.zt_end_time,
 					})).then((res) => {
 					if(res.data.responseCode == 0) {
 						self.$message({
@@ -388,8 +415,6 @@
 							message: `修改成功`
 						});
 						self.dialogVisible=false;
-						self.start_time = res.data.data[0].value
-						self.end_time = res.data.data[1].value
 					}
 				}).catch(function(error) {
 					//console.log(error);

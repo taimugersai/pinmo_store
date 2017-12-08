@@ -87,10 +87,16 @@
                         });
                     } else {
                         //console.log(res)
-                        self.name=res.data.display_name
-                        self.phone = res.data.tel
-                        self.address = res.data.address
-                        self.active = res.data.brand_id
+                        self.name=res.data.display_name;
+                        self.phone = res.data.tel;
+                        self.address = res.data.address;
+                        self.active = res.data.brand_id;
+                         if(self.active==1){
+                            self.imgUrl="../static/img/pinmo_logo.png"
+                        }else if(self.active==2){
+                            self.imgUrl="../static/img/mama_logo.png"
+                        }
+
                     }
                 }).catch(function(error) {
                     //console.log(error);
